@@ -3,6 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <title>Startseite</title>
+    <script>
+      window.onload = () => {
+        const dateInput = document.getElementById("dateInput");
+        const timeInput = document.getElementById("timeInput");
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+        const countdown = document.getElementById("countdownDisplay");
+
+        const now = new Date();
+
+        let intervalId = null;
+
+        startButton.onclick = () => {
+          console.debug("Start button clicked");
+          const endDate = dateInput.valueAsDate.getTime();
+          const endTime = timeInput.valueAsDate.getTime();
+          const timeOffset = timeInput.valueAsDate.getTimezoneOffset();
+          intervalId = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = endDate + (endTime + timeOffset * 60 * 1000) - now;
+
+            if (diff <= 0) {
+              clearInterval(intervalId);
+              countdown.textContent = "[00:00:00]";
+              return;
+            }
+            const hours = Math.floor(diff / 1000 / 60 / 60);
+            const minutes = Math.floor(diff / 1000 / 60) % 60;
+            const seconds = Math.floor(diff / 1000) % 60;
+            countdown.textContent = `[${String(hours).padStart(
+              2,
+              "0"
+            )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+              2,
+              "0"
+            )}]`;
+          }, 1000);
+        };
+
+        stopButton.onclick = () => {
+          clearInterval(intervalId);
+        };
+      };
+    </script>
   </head>
   <body>
     <h1>Countdown</h1>
